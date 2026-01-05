@@ -3,14 +3,23 @@ grist.ready({
   requiredAccess: 'read table',
 });
 
-
 grist.onRecords(records => {
   if (!records) {
     return
   }
   window.fuseSearch = new window.Fuse(records, {
-    keys: Object.keys(records[0]),
-    includeScore: true
+    keys: [{
+      name: "titre",
+      weight: 1
+    },{
+      name: "description",
+      weight: 0.5
+    },{
+      name: "mots_cles",
+      weight: 0.1
+    }],
+    includeScore: true,
+    ignoreDiacritics: true,
   })
 })
 
@@ -22,17 +31,18 @@ function change() {
   for (var i = listNode.children.length - 1; i >= 0; i--) {
     listNode.children.item(i).remove()
   }
+
   results.forEach(result => {
     const row = document.createElement("tr")
     row.dataset.itemId = result.item.id
 
-    /*const idx = document.createElement("td")
-    idx.innerText = result.score
-    row.appendChild(idx)*/
-
     const title = document.createElement("td")
     title.innerText = result.item.titre
     row.appendChild(title)
+
+    const idx = document.createElement("td")
+    idx.innerText = Math.round(result.score*1000)/1000
+    row.appendChild(idx)
 
     listNode.appendChild(row)
     row.addEventListener('click', select)
