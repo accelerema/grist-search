@@ -12,14 +12,16 @@ grist.onRecords(records => {
       name: "titre",
       weight: 1
     },{
-      name: "description",
+      name: "mots_cles",
       weight: 0.5
     },{
-      name: "mots_cles",
+      name: "description",
       weight: 0.1
     }],
     includeScore: true,
     ignoreDiacritics: true,
+    ignoreLocation: true,
+    // includeMatches: true,
   })
 })
 
